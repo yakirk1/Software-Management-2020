@@ -8,6 +8,6 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npx eslint test/
       - run: npm test
+      - run: npm run lint
       - run: ./node_modules/.bin/firebase deploy --token $FIREBASE_TOKEN --only hosting
