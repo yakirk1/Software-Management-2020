@@ -1,0 +1,32 @@
+{
+  "name": "Software-Management-2020",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.spec.js --color",
+    "lint": "eslint src/*.js --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Almogma/Software-Management-2020.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Almogma/Software-Management-2020/issues"
+  },
+  "homepage": "https://github.com/Almogma/Software-Management-2020#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0",
+    "mocha": "^7.1.1"
+  }
+}
