@@ -1,6 +1,7 @@
 const authSwitchLinks = document.querySelectorAll('.switch');
 const authModals = document.querySelectorAll('.auth .modal');
 const authWrapper = document.querySelector('.auth');
+const registerForm = document.querySelector('.register');
 const loginForm = document.querySelector('.login');
 const signOut = document.querySelector('.sign-out');
 const adminElements = document.querySelectorAll('.admin');
@@ -76,3 +77,47 @@ registerForm.addEventListener('submit', (e) => {
   registerForm.querySelector('.error').textContent = error;
 }
 })
+
+// login form
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = loginForm.email.value;
+  const password = loginForm.password.value;
+  //setAdmins();
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(user => {
+      console.log('logged in', user);
+
+      admin.auth().getUser(uid).then((userRecord) => {
+        // The claims can be accessed on the user record.
+        console.log(userRecord.customClaims['admin']);
+      });
+      loginForm.reset();
+    })
+    .catch(error => {
+      loginForm.querySelector('.error').textContent = error.message;
+    });
+});
+
+// auth listener
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    user.getIdTokenResult().then(getIdTokenResult => {
+      user.admin= getIdTokenResult.claims.admin;
+      if(user.admin){
+        console.log(getIdTokenResult.claims.admin);
+        adminElements.forEach(item => item.style.display ='block');
+      }
+      else{
+        adminElements.forEach(item => item.style.display ='none');
+      }
+
+    authWrapper.classList.remove('open');
+    
+    authModals.forEach(modal => modal.classList.remove('active'));
+    })
+  } else {
+    authWrapper.classList.add('open');
+    authModals[0].classList.add('active');
+  }
+});
