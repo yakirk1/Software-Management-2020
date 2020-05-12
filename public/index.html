@@ -1,29 +1,120 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<title> MyForm </title>
-		<!-- The core Firebase JS SDK is always required and must be listed first -->
-		<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-database.js"></script>
-		<script src="https://logintest-ec7bf.firebaseapp.com/index.js"> </script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SuperSami</title>
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+      }
+      
+      li {
+        float: left;
+      }
+      
+      li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+      
+      li a:hover {
+        background-color: #111;
+        cursor:pointer;
+      }
+      </style>
+  </head>
+  <body>
 
-		<body>
-			
-			<h1> MyForm </h1>
-			<div id="formcontainer">
-				<div id="header"> </div>
-			<input type="email" placeholder="email" id="email" />
-			
-			<input type="password" placeholder="password" id="password" />
-			
-			<button onclick="signUp()" id="signup"> Sign Up </button>
+    <!-- new product modal -->
+    <div class="new-product">
+       <div class="modal">
+         <h2>Add a new product</h2>
+        <form>
+          <input type="text" name="product_name" placeholder="name...">
+           <input type="text" name="product_manufacturer" placeholder="manufacturer...">
+          <input type="text" name="product_amount" placeholder="amount...">
+          <input type="number" name="product_price" placeholder="price...">
+          <input type="text" name="product_isKosher" placeholder="Kashrut...">
+          <input type="text" name="product_category" placeholder="category...">
+          <input type="text" name="product_expiryDate" placeholder="expiryDate...">
+          <input type="text" name="product_url" placeholder="url...">
+          <button>Submit Product</button>
+           <p class="error"></p>
+        </form>
+      </div>
+     </div>
+ 
+ <!-- new product modal -->
 
-			<button onclick="Login()" id="login"> Login </button>
+    
+    <section class="content" id="app1">
+      <h1>Products</h1>
+      <ul class="product-list" style="display:inline;"> 
+        <li v-for="product in products">
+          <p class="text">
+            {{"Name = "+product.name}} <br>
+            {{"Manufacturer = "+product.manufacturer}} <br>
+            {{"Amount = "+product.amount}} <br>
+            {{"Price= "+product.price}} <br>
+            {{"Kashrut="+product.kashrut }} <br>
+            {{"Category="+product.category }} <br>
+            {{"Expiration Date="+product.expiryDate }} <br>
+            <img :src="product.url" alt="Snow" style="width:100%;max-width:300px">
+            <input type="number" class="amount" :id="product.name" placeholder="amount...">
+            <button type="button" class="add-to-cart" :id="product.name" :onclick=`addToCart("${product.name}")`
+            >Add to Cart</button>
+          </p>
+        </li>
+      </ul>
 
-			<button onclick="signOut()" id="signout"> Sign Out </button>
+      <div style="margin-right:auto; flex-direction:row;">      
+      <select id="sort">
+        <option value="manufacturer" selected>Manufacturer</option>
+        <option value="category">Category</option>
+        <option value="name">Name</option>
+        <option value="price">Price</option>
+      </select>
+        <button type="button" v-on:click="sortBy()">Sort By</button>
 
-			</div>
-		</body>
+        <select id="filter">
+          <option value="manufacturer" selected>Manufacturer</option>
+          <option value="category">Category</option>
+          <option value="name">Name</option>
+          <option value="price">Price</option>
 
+        </select>
+          
+          <button type="button" v-on:click="filterBy()">Filter By</button>
+          <input type="text" name="filter" id="filterText" placeholder="Enter filter criteria" style="width:30%;">
+          <p class="errorDisplay"> </p>
+        </div>
+   </section>
 
+    <!-- vue js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- firebase base model -->
+    <script src="/__/firebase/7.7.0/firebase-app.js"></script>
+    <!-- firebase features -->
+    <script src="/__/firebase/7.7.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.7.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/7.7.0/firebase-functions.js"></script>
+    <script src="/__/firebase/7.7.0/firebase-storage.js"></script>
+
+    <!-- initialize SDK  -->
+    <script src="/__/firebase/init.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+  </body>
 </html>
