@@ -18,6 +18,16 @@ system requirements:
 
 * [NodeJS LTS](https://nodejs.org)
 * [NPM](https://www.npmjs.com/)
+
+Open folder for this project and clone this repository use follow command:
+```
+git clone https://github.com/Almogma/Software-Management-2020.git
+```
+
+After clone the project open terminal and navigate to project folder and run the follow command.:
+```
+npm install
+```
 	
 ## Technologies
 Project is created with:
