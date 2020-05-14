@@ -6,7 +6,10 @@
 * [Setup](#setup)
 
 ## General info
-This project is simple Lorem ipsum dolor generator.
+This project was done under the curriculum under the "Software Project Management" course.
+In this project, we were asked to set up a website that would represent the College's Internet market.
+To do this, we were asked to work with external servers that would store our information like Fairbase.
+Plus working under CICD with CircleCI.
 	
 ## Technologies
 Project is created with:
