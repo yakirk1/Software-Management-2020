@@ -4,7 +4,7 @@
 * [General info](#general-info)
 * [Prerequisites](#prerequisites)
 * [Technologies](#technologies)
-* [Setup](#setup)
+
 
 ## General info
 This project was done under the curriculum under the "Software Project Management" course.
