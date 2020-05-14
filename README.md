@@ -1,5 +1,5 @@
 # Software-Management-2020
-
+![alt text](https://imgur.com/kHFmdKY)
 ## Table of contents
 * [General info](#general-info)
 * [Prerequisites](#prerequisites)
