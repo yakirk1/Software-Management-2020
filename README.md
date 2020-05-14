@@ -33,7 +33,7 @@ npm install
 Project is created with:
 * Visual Studio Code: 1.45
 * Node.js: 12.16.3
-* [Airbnb]:(https://github.com/airbnb/javascript)
+* Airbnb
 	
 	
 ## Authors
