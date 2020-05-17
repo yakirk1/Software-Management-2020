@@ -28,8 +28,7 @@ After clone the project open terminal and navigate to project folder and run the
 ```
 npm install
 ```
-and than
-
+And then
 
 ```
 npm install eslint-plugin-promise@latest --save-dev
