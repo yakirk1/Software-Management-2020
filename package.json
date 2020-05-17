@@ -1,9 +1,9 @@
 {
-  "name": "Software-Management-2020",
+  "name": "supersami",
   "version": "1.0.0",
-  "description": "",
+  "description": "SuperSami's website development",
   "main": "index.js",
-  "scripts": {
+   "scripts": {
     "test": "mocha test/*.spec.js --color",
     "lint": "eslint src/*.js --color"
   },
@@ -14,11 +14,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Almogma/Software-Management-2020/issues"
-  },
-  "homepage": "https://github.com/Almogma/Software-Management-2020#readme",
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
@@ -29,5 +26,8 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "firebase-tools": "^8.0.3",
     "mocha": "^7.1.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
   }
 }
