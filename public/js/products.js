@@ -55,67 +55,22 @@ var app1 = new Vue({
       });
       if(myuser.length!=0){
       status = myuser[0].isStudent;
-      var requirement={};
-      const ref = firebase.firestore().collection('products');
-      const req = firebase.firestore().collection('transactions');
-
-      req.onSnapshot(snapshot => {
-      let transactions = [];
-      snapshot.forEach(doc => {
-        if(doc.data().email==user.email){
-          for(var key in doc.data().mycart){
-          if(key in requirement)
-          requirement[key]= requirement[key]+ doc.data().mycart[key];
-          else{
-            requirement[key]= doc.data().mycart[key];
-
-          }
-        }
-        
-      }
-    });
-       ref.onSnapshot(snapshot => {
-        snapshot.forEach(doc => {
-          if(!(doc.data().name in requirement)){
-          requirement[doc.data().name]=0;
-        }
-        });
-        var keys = [];
-        for(var key in requirement) { keys.push(key) }
-        keys.sort(function(a, b) {
-          return keys[b] - keys[a];
-        })
-
-
-        ref.onSnapshot(snapshot => {
-          let products = [];
-          var i=0;
-          snapshot.forEach(doc => {
-            for(i=0;i<keys.length;i++){
-            if(doc.data().amount>0 && doc.data().name==keys[i]){
-            products[i]={...doc.data(),id:doc.id};
-          }
-        }
-        
-      });
-      this.products = products;
-        });
-      
-      });
     
-    
-      });
-      }  
-      else{
         const ref = firebase.firestore().collection('products');
         ref.onSnapshot(snapshot => {
           let products = [];
+          var i = 0;
           snapshot.forEach(doc => {
             if(doc.data().amount>0){
             products.push({...doc.data(),id:doc.id});
+            if(status == true){
+              products[i].price = products[i].price * 0.9;
+              i++;
+            }
           }
         
       });
+      console.log(products)
       this.products = products;
         });
       }

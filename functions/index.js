@@ -64,12 +64,37 @@ exports.addProduct = functions.https.onCall((data, context) => {
       'only authenticated users can add products'
     );
   }
-  if (data.name.length > 10) {
+    if (data.name.length > 10) {
+        throw new functions.https.HttpsError(
+        'invalid-argument', 
+        'product name must be no more than 10 characters long'
+      );
+    }
+    if (isPictureValid(data.url) === false) {
       throw new functions.https.HttpsError(
       'invalid-argument', 
-      'product name must be no more than 10 characters long'
-    );
-  }
+      'url format must be png or jpg '
+    );}
+  if (isPictureValid(data.url) === false) {
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'url format must be png or jpg '
+  );}
+  if (isAmountValid(data.amount) === false) {
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'amount field is not a number or not a positive number '
+  );}
+  if (isPriceValid(data.price) === false) {
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'price field is not a number between 0 to 1000'
+  );}
+  if (isDateValid(data.date) === false) {
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'date is not in the right format - “mm/dd/yyyy”'
+  );}
   return admin.firestore().collection('products').add({
     name: data.name,
     manufacturer: data.manufacturer,
@@ -88,6 +113,66 @@ exports.addProduct = functions.https.onCall((data, context) => {
     );
 });
 });
+
+function isDateValid(date)
+{
+    // First check for the pattern
+    if(!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(date))
+        return false;
+
+    // Parse the date parts to integers
+    var parts = date.split("/");
+    var day = parseInt(parts[1], 10);
+    var month = parseInt(parts[0], 10);
+    var year = parseInt(parts[2], 10);
+
+    // Check the ranges of month and year
+    if(year < 1000 || year > 3000 || month === 0 || month > 12)
+        return false;
+
+    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+    // Adjust for leap years
+    if(year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
+        monthLength[1] = 29;
+
+    // Check the range of the day
+    return day > 0 && day <= monthLength[month - 1];
+}
+
+function isPriceValid(price){
+  if(isNaN(price) === true){
+    return false;
+  }
+  if(parseInt(price, 10) <= 0 || parseInt(price, 10) >= 1000 ){
+    return false;
+  }
+  return true;
+}
+
+function isAmountValid(amount){
+  if(isNaN(amount) === true){
+    return false;
+  }
+  if(parseInt(amount, 10) < 0){
+    return false;
+  }
+  return true;
+}
+
+function isPictureValid(url){
+  console.log(url);
+  url+="";
+ index=url.indexOf(".");
+ if(index === -1){
+   return false;
+ }
+ var check=url.substring(index+1,url.length);
+ if (check!=='png' && check!=='jpg') {
+    return false;
+ }
+ return true;
+}
 
 /*
 //add new product
@@ -206,7 +291,8 @@ exports.setStudentApproval = functions.https.onCall(async (data, context) => {
       'unauthenticated'
     );
   }
-  
+
+   /*eslint no-useless-catch:*/
   const userProfile =  await admin.auth().getUserByEmail(data.email);
   try {
   const result =await  admin.firestore().collection('users').doc(userProfile.uid).update({isStudent:true});
@@ -296,7 +382,31 @@ exports.addToCart = functions.https.onCall(async (data, context) => {
       'unauthenticated', 
       'only authenticated users can add products'
     );
-  }
+  }/*
+  if (checkCVC(data.cvc) === false) {
+    console.log(data.cvc, "in-cvc")
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'cvc length must be exactly 3 and contain only numeric numbers'
+  );}
+  if (valid_credit_card(data.cardnumber) === false) {
+    console.log(data.cvc, "in-credit_card")
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'card number is not in the right format -  XXXX-XXXX-XXXX-XXXX '
+  );}
+  if (normalizeYear(data.cardnumber) === false) {
+    console.log(data.cvc, "in-credit_card")
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'Expired / Input string isn\'t match the expiration date format or date fragments are invalid'
+  );}
+  if (validDate(data.cardnumber) === false) {
+    console.log(data.cvc, "in-credit_card")
+    throw new functions.https.HttpsError(
+    'invalid-argument', 
+    'Date is invalid'
+  );}  */
   return admin.firestore().collection('transactions').add({
     mycart:data.mycart,
     firstname:data.firstname,
@@ -320,6 +430,72 @@ exports.addToCart = functions.https.onCall(async (data, context) => {
 });
 });
 
+function checkCVC(cvc){
+  if(cvc.length !== 3){
+    return false;
+  }
+  return true;
+}
+
+function valid_credit_card(value) {
+  // Accept only digits, dashes or spaces
+    if (/[^0-9-\s]+/.test(value)) return false;
+
+    // The Luhn Algorithm. It's so pretty.
+    let nCheck = 0, bEven = false;
+    value = value.replace(/\D/g, "");
+
+    for (var n = value.length - 1; n >= 0; n--) {
+        var cDigit = value.charAt(n),
+              nDigit = parseInt(cDigit, 10);
+
+        if (bEven && (nDigit *= 2) > 9) nDigit -= 9;
+
+        nCheck += nDigit;
+        bEven = !bEven;
+    }
+
+    return (nCheck % 10) === 0;
+}
+
+function validateCardNumber(number) {
+    var regex = new RegExp("^[0-9]{16}$");
+    if (!regex.test(number))
+        return false;
+
+    return true;
+}
+
+function luhnCheck(val) {
+    var sum = 0;
+    for (var i = 0; i < val.length; i++) {
+        var intVal = parseInt(val.substr(i, 1));
+        if (i % 2 === 0) {
+            intVal *= 2;
+            if (intVal > 9) {
+                intVal = 1 + (intVal % 10);
+            }
+        }
+        sum += intVal;
+    }
+    return (sum % 10) === 0;
+}
+
+function validDate(dValue) {
+  dValue = dValue.split('/');
+  var pattern = /^\d{2}$/;
+
+  if (dValue[0] < 1 || dValue[0] > 12)
+      return false;
+
+  if (!pattern.test(dValue[0]) || !pattern.test(dValue[1]))
+      return false;
+
+  if (dValue[2])
+      return false;
+
+  return true;
+}
 
 exports.updateStock = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
