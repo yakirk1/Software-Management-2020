@@ -1,5 +1,5 @@
 # Software-Management-2020
-![alt text](http://up419.siz.co.il/up2/kjrdazzjzyn2.png)
+![alt text](http://up419.siz.co.il/up2/e2vtjngokjvy.png)
 ## Table of contents
 * [General info](#general-info)
 * [Prerequisites](#prerequisites)
