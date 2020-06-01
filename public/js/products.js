@@ -94,6 +94,9 @@ var app1 = new Vue({
             for(i=0;i<keys.length;i++){
             if(doc.data().amount>0 && doc.data().name==keys[i]){
             products[i]={...doc.data(),id:doc.id};
+            if(status==true){
+              products[i].price=products[i].price*0.9;
+            }
           }
         }
         
@@ -113,6 +116,7 @@ var app1 = new Vue({
           snapshot.forEach(doc => {
             if(doc.data().amount>0){
             products.push({...doc.data(),id:doc.id});
+            
           }
         
       });

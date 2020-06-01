@@ -120,7 +120,7 @@
  
     <!-- checkout modal -->
     <div class="checkout-modal">
-      <div class="modal" style="width: 400px;
+      <div class="modal" style="width: 1500px ; height:800px";
       padding: 30px;
       margin: 100px auto;
       border-radius: 10px;
@@ -128,9 +128,32 @@
       box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
       text-align: center;">
        <form>
+         <section style="max-height:800px; overflow-y:auto;">
+        <section class="content" id="app7">
+          <h1>Suggested products</h1>
+          <div id="container">
+            <ul class="suggestion-list" style="display:inline;"> 
+              <li v-for="suggestion in suggestions">
+                <p class="text">
+                  {{"Name = "+suggestion.name}} <br>
+                  {{"Manufacturer = "+suggestion.manufacturer}} <br>
+                  {{"Amount = "+suggestion.amount}} <br>
+                  {{"Price= "+suggestion.price}} <br>
+                  {{"Kashrut="+suggestion.kashrut }} <br>
+                  {{"Category="+suggestion.category }} <br>
+                  {{"Expiration Date="+suggestion.expiryDate }} <br>
+                  <img :src="suggestion.url" alt="Snow" style="width:150px ;height:100px">
+                  <input type="number" class="amount" :id="suggestion.name" placeholder="amount...">
+                  <button type="button" @click="init" class="user-button" :id="suggestion.name" :onclick=`addToCart("${suggestion.name}")`
+                  >Add to Cart</button>
+                </p>
+              </li>
+            </ul>
+
+          </section>
         <section class="content" id="app3">
           <h1>Checkout</h1>
-          <div id="container" style="max-height:200px; overflow-y: auto;">
+          <div id="container">
             <ul class="cart-list" style="display:inline;"> 
               <li v-for="cart in products">
                 <p class="text">
@@ -142,6 +165,7 @@
             </ul>
             <p class="totalPrice">           
             </p>
+          </section>
             <input type="text" name="firstname" placeholder="First name...">
             <input type="text" name="lastname" placeholder="Last name...">
             <input type="text" name="address" placeholder="Address...">
@@ -156,7 +180,7 @@
               <input type="text" name="cardnumber" placeholder="Card number...">
               <input type="text" name="cvc" placeholder="CVC...">
               <input type="text" name="expirydate" placeholder="Expiry date...">
-              <button type="button" onclick="addTransactions()">Finish</button>
+              <button type="button" @click="init" onclick="addTransactions()">Finish</button>
             </div>
           </section>
           </form>
@@ -397,6 +421,7 @@
     <script src="js/checkout.js"></script>
     <script src="js/productsadmin.js"></script>
     <script src="js/transactions.js"></script>
+    <script src="js/suggestion.js"></script>
 
 
 
