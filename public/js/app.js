@@ -36,7 +36,7 @@ function submitApproved(){
         approveForm.reset();
         approveModal.classList.remove('open');
      
-      });
+      })
     }
     }
     if(flag==false){
@@ -339,7 +339,7 @@ function addTransactions(){
          //  checkoutForm.querySelector('.error').textContent = '';
          })
          .catch(error =>{
-          //checkoutForm.querySelector('.error').textContent = error.message;
+          checkoutForm.querySelector('.error').textContent = error.message;
          });
 
         }})

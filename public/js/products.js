@@ -55,6 +55,7 @@ var app1 = new Vue({
       });
       if(myuser.length!=0){
       status = myuser[0].isStudent;
+<<<<<<< HEAD
       var requirement={};
       const ref = firebase.firestore().collection('products');
       const req = firebase.firestore().collection('transactions');
@@ -106,20 +107,28 @@ var app1 = new Vue({
       
       });
     
+=======
+>>>>>>> 37313c84f5efb7d1e8b1c5fbb29a601fb161532f
     
-      });
-      }  
-      else{
         const ref = firebase.firestore().collection('products');
         ref.onSnapshot(snapshot => {
           let products = [];
+          var i = 0;
           snapshot.forEach(doc => {
             if(doc.data().amount>0){
             products.push({...doc.data(),id:doc.id});
+<<<<<<< HEAD
             
+=======
+            if(status == true){
+              products[i].price = products[i].price * 0.9;
+              i++;
+            }
+>>>>>>> 37313c84f5efb7d1e8b1c5fbb29a601fb161532f
           }
         
       });
+      console.log(products)
       this.products = products;
         });
       }
