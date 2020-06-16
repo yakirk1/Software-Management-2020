@@ -91,71 +91,27 @@ var app7 = new Vue({
             this.updateKeys(mycart,status,email);
         },
         updateKeys(mycart,status,email){
-          /*
-            var keys = [];
-            for(var key in this.potentialSuggestions) { keys.push(key) }
-          
-            keys.sort(function(a, b) {
-              return keys[b] - keys[a];
-            })
-*/
-            console.log(this.potentialSuggestions,"fff");
             var dict=this.potentialSuggestions;
-            var keys = Object.keys(dict).map(function(key) {
-              return [key, dict[key]];
-            });
-
-            // Sort the array based on the second element
-            keys.sort(function(first, second) {
-              return second[1] - first[1];
-            });
-            console.log(JSON.stringify(keys,"179 keys"));
-            /*
-            if(Object.keys(this.potentialSuggestions).length<3){
-             // console.log(copy2,"copy2");
-              console.log("kol ma she ba leha")
-              console.log(JSON.stringify(this.potentialSuggestions));
-
-            this.BibiZevel(email);
-            
-}
-          else{
-            */
+            var keys = Object.keys(dict).map(function(key) {return [key, dict[key]];});
+            keys.sort(function(first, second) {return second[1] - first[1];});
             const refs = firebase.firestore().collection('products').orderBy('name', 'asc');
-
             refs.onSnapshot(snapshot => {
               let suggestions = [];
               var count=0;
               var i=0;
-              console.log(JSON.stringify(keys),"keys");
               if(keys.length<3){
-               
                 if(count==0){
                 this.BibiZevel(mycart,status,email);
                 count++;  
-              }
-
-               console.log(JSON.stringify(this.potentialSuggestions),"potentialsug");
-
-              }
+              }}
               else{
               snapshot.forEach(doc => {
-
                 for(i=0;i<3;i++){
                 if(doc.data().amount>0 && doc.data().name==keys[i][0]){
                 suggestions[i]={...doc.data(),id:doc.id};
-                if(status==true){
-                    suggestions[i].price=suggestions[i].price*0.9;
-                  }
-              }
-            }
-            
-          });
-        }
-          console.log("??");
-          this.suggestions = suggestions;
-            });
-          //}
+                if(status==true)
+                    suggestions[i].price=suggestions[i].price*0.9;}}});}
+          this.suggestions = suggestions;});
         },
         init(){
           setTimeout(() => { this.potentialSuggestions={};
