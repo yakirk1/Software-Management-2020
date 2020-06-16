@@ -186,16 +186,13 @@ var app7 = new Vue({
                 ref.onSnapshot(snapshot => {
                 for(var key in this.potentialSuggestions){
                     snapshot.forEach(doc => {
-                        if(doc.data().name==key&&doc.data().amount<=0){
+                        if(doc.data().name==key)
+                          if(doc.data().amount<=0)
                             delete this.potentialSuggestions[key];
-                        }
                     })
                 }
                 console.log(this.potentialSuggestions,"check potential bibizevel");
                 this.updateKeys(mycart,status,user.email);
-    
-    
-    
         })
       
             }
