@@ -15,7 +15,6 @@ var app7 = new Vue({
         SearchSimilarity(prodName,email){
             var ref = firebase.firestore().collection('transactions');
             ref.onSnapshot(snapshot => {
-                let products = [];
                 let cart =[];
                 snapshot.forEach(doc => {
                   var flag=false;
@@ -26,26 +25,14 @@ var app7 = new Vue({
                         if(key==key3&&flag==false){
                           flag=true;
                             for(var key2 in cart){
-                                if(key2 in this.potentialSuggestions){
+                                if(key2 in this.potentialSuggestions)
                                     this.potentialSuggestions[key2]= Number(this.potentialSuggestions[key2])+ Number(cart[key2]);
-
-                                }
-                                else{
+                                else
                                     this.potentialSuggestions[key2]= Number(cart[key2]);
-                                }
                             }
                           }
                         }
                     }
-                    /*
-                  if(doc.data().name==prodName&& doc.data().amount>0){
-
-                  if(prodName in potentialSuggestions)
-                  potentialSuggestions[key]= potentialSuggestions[prodName]+ doc.data().mycart[key];
-                  else{
-                    requirement[key]= doc.data().mycart[key];
-                  }}
-                  */
                 }
             }
                                 
