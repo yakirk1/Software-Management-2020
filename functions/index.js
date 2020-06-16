@@ -356,51 +356,9 @@ exports.addToCart = functions.https.onCall(async (data, context) => {
 
 
   exports.addTransaction = functions.https.onCall((data,context)=>{
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      'unauthenticated', 
-      'only authenticated users can add products'
-    );
-  }/*
-  if (checkCVC(data.cvc) === false) {
-    console.log(data.cvc, "in-cvc")
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'cvc length must be exactly 3 and contain only numeric numbers'
-  );}
-  if (valid_credit_card(data.cardnumber) === false) {
-    console.log(data.cvc, "in-credit_card")
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'card number is not in the right format -  XXXX-XXXX-XXXX-XXXX '
-  );}
-  if (normalizeYear(data.cardnumber) === false) {
-    console.log(data.cvc, "in-credit_card")
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'Expired / Input string isn\'t match the expiration date format or date fragments are invalid'
-  );}
-  if (validDate(data.cardnumber) === false) {
-    console.log(data.cvc, "in-credit_card")
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'Date is invalid'
-  );}  */
-  return admin.firestore().collection('transactions').add({
-    mycart:data.mycart,
-    firstname:data.firstname,
-    lastname:data.lastname,
-    address:data.address,
-    email:data.email,
-    cardtype:data.cardtype,
-    ownerid:data.ownerid,
-    ownername:data.ownername,
-    cardnumber:data.cardnumber,
-    cvc:data.cvc,
-    expirydate:data.expirydate,
-    delivered:false,
-    totalPrice:data.totalPrice
-}).then(() => {
+  if (!context.auth)
+    throw new functions.https.HttpsError('unauthenticated', 'only authenticated users can add products');
+  return admin.firestore().collection('transactions').add({mycart:data.mycart,firstname:data.firstname,lastname:data.lastname,address:data.address,email:data.email,cardtype:data.cardtype,ownerid:data.ownerid,ownername:data.ownername,cardnumber:data.cardnumber,cvc:data.cvc,expirydate:data.expirydate,delivered:false,totalPrice:data.totalPrice}).then(() => {
     return 'new transaction added';
 }).catch(() => {
     throw new functions.https.HttpsError(
