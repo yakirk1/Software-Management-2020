@@ -50,15 +50,12 @@ var app7 = new Vue({
             }
                                 
                 );
-                console.log(this.potentialSuggestions,"potential");
 
             })
         },
         BibiZevel(mycart,status,email){
-          console.log("in bibi zevel")
           var ref = firebase.firestore().collection('transactions');
           ref.onSnapshot(snapshot => {
-              let products = [];
               let cart =[];
               snapshot.forEach(doc => {
                   cart=doc.data().mycart;
@@ -66,71 +63,16 @@ var app7 = new Vue({
                           for(var key2 in cart){
                               if(key2 in this.potentialSuggestions){
                                   this.potentialSuggestions[key2]= Number(this.potentialSuggestions[key2])+ Number(cart[key2]);
-
                               }
                               else{
                                   this.potentialSuggestions[key2]= Number(cart[key2]);
                               }
                           }
-                        
-                      
-                  
-                  /*
-                if(doc.data().name==prodName&& doc.data().amount>0){
-
-                if(prodName in potentialSuggestions)
-                potentialSuggestions[key]= potentialSuggestions[prodName]+ doc.data().mycart[key];
-                else{
-                  requirement[key]= doc.data().mycart[key];
-                }}
-                */
               }
           }
                               
               );
-              console.log(JSON.stringify(this.potentialSuggestions));
         })
-              /*
-              if(Object.keys(this.potentialSuggestions).length<3){
-
-              console.log(JSON.stringify(this.potentialSuggestions),"potential");
-
-              console.log(JSON.stringify(this.potentialSuggestions));
-
-              var dict=this.potentialSuggestions;
-              console.log(dict);
-              var copy = Object.keys(dict).map(function(key) {
-                return [key, dict[key]];
-              });
-                //Object.assign(copy,this.potentialSuggestions);
-              
-              console.log(JSON.stringify(copy),"copy");
-                
-              console.log(this.potentialSuggestions,"after BibiZevel");
-              console.log(keys,"keys");
-              console.log(copy2,"copy2");
-              for(var i=0;i<keys.length;i++){
-                copy2.push(keys[i]);
-                
-              }
-              console.log(copy2,"copy2 ");
-              var ref = firebase.firestore().collection('products');
-              ref.onSnapshot(snapshot => {
-              for(var key in this.potentialSuggestions){
-                  snapshot.forEach(doc => {
-                      if(doc.data().name==key&&doc.data().amount<=0){
-                          delete this.potentialSuggestions[key];
-                      }
-                  })
-              }
-              console.log(this.potentialSuggestions,"check potential bibizevel not last");
-            })
-              }
-          })
-
-*/ 
-         console.log("going out of bibi zevel");
-         console.log(JSON.stringify(this.potentialSuggestions),"potentialsug");
          for(var key in mycart){
           for(var key2 in this.potentialSuggestions){
               if(key==key2){
@@ -139,8 +81,6 @@ var app7 = new Vue({
           } 
        }
          this.updateKeys(mycart,status,email);
-          //this.finalizeSuggestions(mycart,status,email);  
-
         },
         finalizeSuggestions(mycart,status,email){
             var ref = firebase.firestore().collection('products');
@@ -152,7 +92,6 @@ var app7 = new Vue({
                     }
                 })
             }
-            console.log(this.potentialSuggestions,"check potential");
             this.deleteSameProduct(mycart,status,email);
     })
     },
