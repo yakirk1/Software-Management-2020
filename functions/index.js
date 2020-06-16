@@ -55,46 +55,25 @@ exports.emptyCart = functions.https.onCall((data,context)=>{
   return db.collection('carts').doc(data.uid).delete();
 
 })
+function checkData(data){
+  if (data.name.length > 10)
+  throw new functions.https.HttpsError('invalid-argument','product name must be no more than 10 characters long');
+if (isPictureValid(data.url) === false)
+throw new functions.https.HttpsError('invalid-argument','url format must be png or jpg ');
+if (isPictureValid(data.url) === false)
+throw new functions.https.HttpsError('invalid-argument','url format must be png or jpg ');
+if (isAmountValid(data.amount) === false)
+throw new functions.https.HttpsError('invalid-argument','amount field is not a number or not a positive number ');
+if (isPriceValid(data.price) === false)
+throw new functions.https.HttpsError('invalid-argument','price field is not a number between 0 to 1000');
+if (isDateValid(data.date) === false)
+throw new functions.https.HttpsError('invalid-argument','date is not in the right format - “mm/dd/yyyy”');
+}
 //add new product
 exports.addProduct = functions.https.onCall((data, context) => {
-  console.log("in addProduct cloud function");
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      'unauthenticated', 
-      'only authenticated users can add products'
-    );
-  }
-    if (data.name.length > 10) {
-        throw new functions.https.HttpsError(
-        'invalid-argument', 
-        'product name must be no more than 10 characters long'
-      );
-    }
-    if (isPictureValid(data.url) === false) {
-      throw new functions.https.HttpsError(
-      'invalid-argument', 
-      'url format must be png or jpg '
-    );}
-  if (isPictureValid(data.url) === false) {
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'url format must be png or jpg '
-  );}
-  if (isAmountValid(data.amount) === false) {
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'amount field is not a number or not a positive number '
-  );}
-  if (isPriceValid(data.price) === false) {
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'price field is not a number between 0 to 1000'
-  );}
-  if (isDateValid(data.date) === false) {
-    throw new functions.https.HttpsError(
-    'invalid-argument', 
-    'date is not in the right format - “mm/dd/yyyy”'
-  );}
+  if (!context.auth)
+    throw new functions.https.HttpsError('unauthenticated', 'only authenticated users can add products');
+  checkData(data);
   return admin.firestore().collection('products').add({
     name: data.name,
     manufacturer: data.manufacturer,
