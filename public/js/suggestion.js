@@ -61,16 +61,13 @@ var app7 = new Vue({
                   cart=doc.data().mycart;
                   if(doc.data().email!=email){
                           for(var key2 in cart){
-                              if(key2 in this.potentialSuggestions){
+                              if(key2 in this.potentialSuggestions)
                                   this.potentialSuggestions[key2]= Number(this.potentialSuggestions[key2])+ Number(cart[key2]);
-                              }
-                              else{
+                              else
                                   this.potentialSuggestions[key2]= Number(cart[key2]);
-                              }
                           }
               }
-          }
-                              
+          }              
               );
         })
          for(var key in mycart){
