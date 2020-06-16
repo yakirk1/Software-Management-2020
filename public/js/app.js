@@ -19,7 +19,8 @@ const deliveriesModal = document.querySelector('.deliveries-modal');
 const deliveriesForm = document.querySelector('.deliveries-modal form');
 const editProductModal = document.querySelector('.editProduct-modal');
 const editProductForm = document.querySelector('.editProduct-modal form');
-
+const addTransaction = firebase.functions().httpsCallable('addTransaction');
+const emptyCart = firebase.functions().httpsCallable('emptyCart');
 var editProdName;
 var approvalDict ={};
 var deliveriesDict={};
@@ -224,7 +225,6 @@ function addToCart(str1){
   var amount = document.getElementById(str1);
   const carts = firebase.firestore().collection('carts');
   var check=false;
- // console.log(carts.doc(userUID));
   let mycarts = [];
       carts.onSnapshot(snapshot => {
         snapshot.forEach(doc => {
@@ -270,81 +270,63 @@ function addToCart(str1){
         }
       });
 }
-
-function addTransactions(){
-  const addTransaction = firebase.functions().httpsCallable('addTransaction');
-  const emptyCart = firebase.functions().httpsCallable('emptyCart');
+function myObject(mycart){
   var choice = document.getElementById("cards");
-  var result = choice.options[choice.selectedIndex].value; 
+  var result = choice.options[choice.selectedIndex].value;
+  const email =firebase.auth().currentUser.email; 
+  var total=document.querySelector('.totalPrice').textContent;
+
+  return {
+    mycart:mycart,
+    firstname:checkoutForm.firstname.value ,
+    lastname: checkoutForm.lastname.value,
+    address: checkoutForm.address.value,
+    email: email,
+    cardtype:result ,
+    ownerid: checkoutForm.ownerid.value,
+    ownername: checkoutForm.ownername.value,
+    cardnumber:checkoutForm.cardnumber.value,
+    cvc: checkoutForm.cvc.value,
+    expirydate: checkoutForm.expirydate.value,
+    totalPrice:total
+ }
+}
+function emptyMyCart(mycart){
+  var i=0;
+  var prods=[];
+  for(var key in mycart){
+    prods.push({Name:key,Amount:mycart[key]});
+  }
+  for(i=0;i<prods.length;i++){
+    updateProd(prods[i].Name,prods[i].Amount);
+  }
+alert("Purchase successful!")
+}
+function addTransactions(){
   const userUID=firebase.auth().currentUser.uid;
-  const email =firebase.auth().currentUser.email;
   const carts = firebase.firestore().collection('carts');
   let mycarts = [];
   var check=false;
   var mycart;
-  var total=document.querySelector('.totalPrice').textContent;
       carts.onSnapshot(snapshot => {
         snapshot.forEach(doc => {
         if(doc.id ==userUID){
           check=true;
           mycarts.push({...doc.data(), id: doc.id});
           mycart= mycarts[0].mycart 
-          console.log({
-            mycart:mycart,
-            firstname:checkoutForm.firstname.value ,
-            lastname: checkoutForm.lastname.value,
-            address: checkoutForm.address.value,
-            email: email,
-            cardtype:result ,
-            ownerid: checkoutForm.ownerid.value,
-            ownername: checkoutForm.ownername.value,
-            cardnumber:checkoutForm.cardnumber.value,
-            cvc: checkoutForm.cvc.value,
-            expirydate: checkoutForm.expirydate.value,
-            totalPrice:total})
-          addTransaction({
-          mycart:mycart,
-          firstname:checkoutForm.firstname.value ,
-          lastname: checkoutForm.lastname.value,
-          address: checkoutForm.address.value,
-          email: email,
-          cardtype:result ,
-          ownerid: checkoutForm.ownerid.value,
-          ownername: checkoutForm.ownername.value,
-          cardnumber:checkoutForm.cardnumber.value,
-          cvc: checkoutForm.cvc.value,
-          expirydate: checkoutForm.expirydate.value,
-          totalPrice:total
-       })
+          addTransaction(myObject(mycart))
          .then(() =>{
            checkoutForm.reset();
            checkoutModal.classList.remove('open');
            emptyCart({uid:userUID}).then(data=>{
-
-              console.log(data);
-              var i=0;
-              var prods=[];
-              var id;
-              var flag=true;
-              for(var key in mycart){
-                prods.push({Name:key,Amount:mycart[key]});
-              }
-              console.log(prods,"prods");
-              for(i=0;i<prods.length;i++){
-                updateProd(prods[i].Name,prods[i].Amount);
-              }
-            alert("Purchase successful!")
+              emptyMyCart(mycart);
             })
-            
-         //  checkoutForm.querySelector('.error').textContent = '';
          })
          .catch(error =>{
           checkoutForm.querySelector('.error').textContent = error.message;
          });
-
         }})
       })
-      
 }
 
 function updateProd(prodName,amount){
