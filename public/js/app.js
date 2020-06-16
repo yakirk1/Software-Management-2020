@@ -21,6 +21,8 @@ const editProductModal = document.querySelector('.editProduct-modal');
 const editProductForm = document.querySelector('.editProduct-modal form');
 const addTransaction = firebase.functions().httpsCallable('addTransaction');
 const emptyCart = firebase.functions().httpsCallable('emptyCart');
+const addToMyCart = firebase.functions().httpsCallable('addToCart');
+const addNewCart = firebase.functions().httpsCallable('addNewCart');
 var editProdName;
 var approvalDict ={};
 var deliveriesDict={};
@@ -216,57 +218,41 @@ function updateDeliveriesDict(id){
   deliveriesDict[id]=check.checked;
   console.log(deliveriesDict);
 }
+function refactorCodeSmell6(mycarts,str1,doc,amount,userUID){
+    mycarts.push({...doc.data(), id: doc.id});
+    if(typeof mycarts[0]!= 'undefined'){
+      if(!(str1 in mycarts[0].mycart))
+        mycarts[0].mycart[str1] = Number(amount.value);
+    else
+      mycarts[0].mycart[str1] =Number(mycarts[0].mycart[str1]) + Number(amount.value);
+  }
+    addToMyCart({uid:userUID,mycart:mycarts[0].mycart}).then(data =>{
+      amount.value="";
+    })
+    return;
+  }
+  return;
+}
 function addToCart(str1){
-  const addToMyCart = firebase.functions().httpsCallable('addToCart');
-  const addNewCart = firebase.functions().httpsCallable('addNewCart');
-
   const userUID=firebase.auth().currentUser.uid;
-  console.log(userUID);
   var amount = document.getElementById(str1);
   const carts = firebase.firestore().collection('carts');
   var check=false;
   let mycarts = [];
       carts.onSnapshot(snapshot => {
         snapshot.forEach(doc => {
-        if(doc.id ==userUID &&check==false){
-          check=true;
-          mycarts.push({...doc.data(), id: doc.id});
-          if(typeof mycarts[0]!= 'undefined'){
-          if(!(str1 in mycarts[0].mycart)){
-            console.log("in if");
-            mycarts[0].mycart[str1] = Number(amount.value);
-            
-          }
-          else{
-            console.log("in else");
-            mycarts[0].mycart[str1] =Number(mycarts[0].mycart[str1]) + Number(amount.value);
-
-          }
-        }
-          addToMyCart({uid:userUID,mycart:mycarts[0].mycart}).then(data =>{
-            console.log(data,"check");
-            amount.value="";
-          })
-          return;
-        }
-        return;
-      }
-        
-        
+          if(doc.id ==userUID &&check==false){
+            check=true;
+          refactorCodeSmell6(mycarts,str1,doc,amount,userUID);
+      } 
         );
         if(check==false){
           check=true;
-          console.log("7");
           var dict ={};
           dict[str1]=Number(amount.value);
-          console.log(dict);
           addNewCart({uid:userUID,mycart:dict}).then(data =>{
-            console.log(data,"check");
             amount.value="";
-
-           
-          })
-          
+          })    
         }
       });
 }
